@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Peminjaman Alat</title>
+    <link rel="stylesheet" href="src/output.css">
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+
+    <header class="bg-blue-600 text-white px-4 sm:px-5 py-3 sm:py-4 flex justify-between items-center gap-3">
+        <div class="flex items-center gap-3">
+            <button id="tombolMenu" onclick="toggleMenu()" class="md:hidden text-white text-2xl leading-none focus:outline-none" aria-label="Buka menu navigasi">
+                &#9776;
+            </button>
+            <h1 class="text-xl font-bold">PEMINJAMAN ALAT</h1>
+        </div>
+        <div class="flex flex-wrap justify-end items-center gap-2 sm:gap-4">
+            <span id="namaUser"></span>
+        </div>
+    </header>
+
+    <div class="flex flex-col md:flex-row min-h-[calc(100vh-72px)]">
+        <aside id="sidebarMenu" class="hidden md:block w-full md:w-56 bg-white border-b-2 md:border-b-0 md:border-r-2 border-blue-800 flex-shrink-0">
+            <nav class="block">
+                <a href="alat.html" class="block px-4 py-3 border-b border-gray-300 hover:bg-blue-100 font-bold text-l">
+                     DATA ALAT
+                </a>
+                <a href="datapinjaman.html" id="menuPengguna" class="block px-4 py-3 border-b border-gray-300 hover:bg-blue-100 font-bold text-l">
+                    DATA PEMINJAMAN
+                </a>
+                <a href="kategori.html" id="menuKategori" class="block px-4 py-3 border-b border-gray-300 hover:bg-blue-100 font-bold text-l">
+                    KATEGORI
+                </a>
+                <a href="tambahpinjaman.html" class="block px-4 py-3 border-b border-gray-300 hover:bg-blue-100 font-bold text-l">
+                    TAMBAHKAN PEMINJAMAN
+                </a>
+                <a href="tambahalat.html" class="block px-4 py-3 border-b border-gray-300 hover:bg-blue-100 font-bold text-l">
+                    TAMBAHKAN ALAT
+                </a>
+            </nav>
+        </aside>
+<main class="flex-1 p-4 sm:p-6 min-w-0">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-5">Data Alat</h2>
+
+            <div class="bg-white border border-gray-300 rounded-lg p-3 sm:p-4 overflow-x-auto shadow-md shadow-md hover:-translate-y-1 hover:shadow-lg duration-300">
+                <table class="w-full border-collapse ">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="border p-2">Nama Alat</th>
+                            <th class="border p-2">Nama Kategori</th>
+                            <th class="border p-2">Kondisi</th>
+                            <th class="border p-2">Stok</th>
+                            <th class="border p-2">Lokasi</th>
+                            <th class="border p-2">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alat-list"></tbody>
+                </table>
+            </div>
+
+            <!-- FORM EDIT - MUNCUL DI BAWAH TABEL, DI HALAMAN YANG SAMA -->
+            <div id="formEditBox" hidden class="bg-white border border-gray-300 rounded-lg p-4 mt-5 shadow-md">
+                <h2 class="text-xl font-bold mb-4">Edit Alat</h2>
+                <form id="formEditAlat" class="space-y-4 max-w-md">
+                    <input type="hidden" id="edit_id">
+                    <div>
+                        <label class="block mb-1">Nama Alat</label>
+                        <select id="edit_kategori" required class="w-full border px-3 py-2 rounded bg-white"></select>
+                    </div>
+                    <div>
+                        <label class="block mb-1">Nama Kategori</label>
+                        <input id="edit_nama" type="text" required class="w-full border px-3 py-2 rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-1">Kondisi</label>
+                        <input id="edit_kondisi" type="text" required class="w-full border px-3 py-2 rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-1">Stok</label>
+                        <input id="edit_stok" type="number" min="0" required class="w-full border px-3 py-2 rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-1">Lokasi</label>
+                        <input id="edit_lokasi" type="text" required class="w-full border px-3 py-2 rounded">
+                    </div>
+                    <div class="flex gap-2">
+                        <button type="submit" class="border px-4 py-2 rounded bg-white hover:bg-gray-100">Simpan</button>
+                        <button type="button" onclick="document.getElementById('formEditBox').hidden=true" class="border px-4 py-2 rounded bg-white hover:bg-gray-100">Batal</button>
+                    </div>
+                </form>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

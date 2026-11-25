@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Peminjaman Alat</title>
+    <link rel="stylesheet" href="src/output.css">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-blue-600 text-white px-4 sm:px-5 py-3 sm:py-4 flex justify-between items-center gap-3">
+        <div class="flex items-center gap-3">
+            <button id="tombolMenu" onclick="toggleMenu()" class="md:hidden text-white text-2xl leading-none focus:outline-none" aria-label="Buka menu navigasi">&#9776;</button>
+            <h1 class="text-xl font-bold">PEMINJAMAN ALAT</h1>
+        </div>
+        <div class="flex flex-wrap justify-end items-center gap-2 sm:gap-4">
+            <span id="namaUser"></span>
+        </div>
+    </header>
+    <div class="flex flex-col md:flex-row min-h-[calc(100vh-72px)]">
+        <aside id="sidebarMenu" class="hidden md:block w-full md:w-56 bg-white border-b-2 md:border-b-0 md:border-r-2 border-blue-800 flex-shrink-0">
+            <nav class="block">
+                <a href="alat.html" class="block px-4 py-3 border-b border-gray-300 hover:bg-blue-100 font-bold text-l">DATA ALAT</a>
+                <a href="datapinjaman.html" id="menuPengguna" class="block px-4 py-3 border-b border-gray-300 hover:bg-blue-100 font-bold text-l">DATA PEMINJAMAN</a>
+                <a href="kategori.html" id="menuKategori" class="block px-4 py-3 border-b border-gray-300 hover:bg-blue-100 font-bold text-l">KATEGORI</a>
+                <a href="tambahpinjaman.html" class="block px-4 py-3 border-b border-gray-300 hover:bg-blue-100 font-bold text-l">TAMBAHKAN PEMINJAMAN</a>
+                <a href="tambahalat.html" class="block px-4 py-3 border-b border-gray-300 hover:bg-blue-100 font-bold text-l">TAMBAHKAN ALAT</a>
+            </nav>
+        </aside>
+        <main class="flex-1 p-4 sm:p-6 min-w-0">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-5">Tambahkan Peminjaman</h2>
+            <div id="formBox" class="w-full bg-white border border-slate-200 p-4 mb-6 rounded shadow-md">
+                <div id="message-area"></div>
+                <form id="form-peminjaman" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-slate-500 mb-1" for="id_alat">Nama Alat</label>
+                        <select id="id_alat" required class="w-full border px-3 py-2 rounded text-sm bg-white">
+                            <option value="">-- Pilih Nama Alat --</option>
+                        </select>
+                        <p id="infoStok" class="text-[11px] text-slate-400 mt-1">Pilih alat dulu untuk lihat stok.</p>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-500 mb-1" for="nama_peminjam">Nama Peminjam</label>
+                        <input id="nama_peminjam" required type="text" placeholder="Nama Peminjam" class="w-full border px-3 py-2 rounded text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-500 mb-1" for="kelas">Kelas</label>
+                        <input id="kelas" required type="text" placeholder="Kelas" class="w-full border px-3 py-2 rounded text-sm">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs text-slate-500 mb-1" for="tanggal_pinjam">Tanggal Pinjam</label>
+                        <input id="tanggal_pinjam" type="date" required class="w-full border px-3 py-2 rounded text-sm bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-500 mb-1" for="tanggal_kembali">Tanggal Kembali</label>
+                        <input id="tanggal_kembali" type="date" class="w-full border px-3 py-2 rounded text-sm bg-white">
+                        <p class="text-[11px] text-slate-400 mt-1">Boleh dikosongkan kalau masih Dipinjam.</p>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-500 mb-1" for="jumlah">Jumlah</label>
+                        <input id="jumlah" required type="number" min="1" placeholder="Jumlah" class="w-full border px-3 py-2 rounded text-sm">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="flex items-center gap-2 text-sm cursor-pointer">
+                            <input id="sudahKembali" type="checkbox" class="w-4 h-4">
+                            Sudah dikembalikan
+                        </label>
+                    </ [div>
+                    <div>
+                        <label class="block text-xs text-slate-500 mb-1" for="status">Status (Otomatis)</label>
+                        <input id="status" value="Dipinjam" readonly class="w-full border px-3 py-2 rounded text-sm bg-gray-100 font-bold">
+                        <p class="text-[11px] text-slate-400 mt-1">Otomatis dari tanggal + centang di atas</p>
+                    </div>
+                    <div class="sm:col-span-2 flex gap-3">
+                        <button type="submit" class="border px-4 py-2 rounded text-sm hover:bg-slate-100 transition">Tambah</button>
+                        <button type="button" onclick="window.location.href='datapinjaman.html'" class="border px-4 py-2 rounded text-sm hover:bg-slate-100 transition">Batal</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+   <script>
+    const formTambah = document.getElementById('form-peminjaman');
+    const messageArea = document.getElementById('message-area');
+    const inputTanggalKembali = document.getElementById('tanggal_kembali');
+    const inputTanggalPinjam = document.getElementById('tanggal_pinjam');
+    const inputStatus = document.getElementById('status');
+    const checkSudahKembali = document.getElementById('sudahKembali');
+    const selectAlat = document.getElementById('id_alat');
+    const infoStok = document.getElementById('infoStok');
+    let dataAlat = [];
+
+    async function loadAlatDropdown() {
+        try {
+            const res = await fetch('http://localhost:3000/api/alat');
+            const data = await res.json();
+            const list = Array.isArray(data) ? data : data.data;
+            dataAlat = list;
+            list.forEach(a => {
+                const opt = document.createElement('option');
+                opt.value = a.id_alat;
+                opt.textContent = `${a.nama_alat} - Stok: ${a.stok}`;
+                selectAlat.appendChild(opt);
+            });
+        } catch (e) { console.log('Gagal load alat', e); }
+    }
+    loadAlatDropdown();
+
+    // Hitung stok yang masih tersedia (stok total - yang lagi dipinjam)
+    async function hitungStokTersedia(id_alat) {
+        const alat = dataAlat.find(a => a.id_alat == id_alat);
+        if (!alat) return 0;
+        try {
+            const res = await fetch('http://localhost:3000/api/peminjaman');
+            const data = await res.json();
+            const list = Array.isArray(data) ? data : data.data;
+            const lagiDipinjam = list
+                .filter(p => p.id_alat == id_alat && (p.status || '').trim().toLowerCase() !== 'dikembalikan')
+                .reduce((total, p) => total + Number(p.jumlah || 0), 0);
+            return Number(alat.stok) - lagiDipinjam;
+        } catch (e) {
+            return Number(alat.stok);
+        }
+    }
+
+    async function updateInfoStok() {
+        const id = selectAlat.value;
+        if (!id) {
+            infoStok.textContent = 'Pilih alat dulu untuk lihat stok.';
+            infoStok.style.color = '';
+            return;
+        }
+        const tersedia = await hitungStokTersedia(id);
+        const alat = dataAlat.find(a => a.id_alat == id);
+        infoStok.textContent = `Stok tersedia: ${tersedia} dari total ${alat.stok} (yang lagi dipinjam sudah dikurangi)`;
+        infoStok.style.color = tersedia <= 0 ? 'red' : '';
+        infoStok.style.fontWeight = tersedia <= 0 ? 'bold' : '';
+    }
+    selectAlat.addEventListener('change', updateInfoStok);
+
+    function updateStatusOtomatis() {
+        if (checkSudahKembali.checked) { inputStatus.value = 'Dikembalikan'; }
+        else {
+            if (inputTanggalKembali.value) {
+                const hariIni = new Date(); hariIni.setHours(0, 0, 0, 0);
+                const tglKembali = new Date(inputTanggalKembali.value); tglKembali.setHours(0, 0, 0, 0);
+                inputStatus.value = tglKembali < hariIni ? 'Terlambat' : 'Dipinjam';
+            } else { inputStatus.value = 'Dipinjam'; }
+        }
+        inputStatus.classList.remove('text-blue-600', 'text-red-600', 'text-green-600');
+        if (inputStatus.value === 'Terlambat') inputStatus.classList.add('text-red-600');
+        if (inputStatus.value === 'Dikembalikan') inputStatus.classList.add('text-green-600');
+        if (inputStatus.value === 'Dipinjam') inputStatus.classList.add('text-blue-600');
+    }
+    inputTanggalKembali.addEventListener('change', updateStatusOtomatis);
+    inputTanggalKembali.addEventListener('input', updateStatusOtomatis);
+    inputTanggalPinjam.addEventListener('change', updateStatusOtomatis);
+    checkSudahKembali.addEventListener('change', updateStatusOtomatis);
+    updateStatusOtomatis();
+
+    formTambah.addEventListener('submit', async function (event) {
+        event.preventDefault();
+        updateStatusOtomatis();
+        const productData = {
+            id_alat: Number(document.getElementById('id_alat').value),
+            nama_peminjam: document.getElementById('nama_peminjam').value,
+            kelas: document.getElementById('kelas').value,
+            tanggal_pinjam: document.getElementById('tanggal_pinjam').value,
+            tanggal_kembali: inputTanggalKembali.value || null,
+            jumlah: Number(document.getElementById('jumlah').value),
+            status: inputStatus.value
+        };
+        if (!productData.id_alat) { alert("Pilih nama alat terlebih dahulu!"); return; }
+
+        // CEK STOK - kalau jumlah melebihi stok, muncul notif, batal simpan
+        const tersedia = await hitungStokTersedia(productData.id_alat);
+        const alatDipilih = dataAlat.find(a => a.id_alat == productData.id_alat);
+        if (productData.jumlah > tersedia) {
+            const pesan = `Stok tidak cukup!\n\nAlat: ${alatDipilih ? alatDipilih.nama_alat : ''}\nStok tersedia: ${tersedia}\nYang mau dipinjam: ${productData.jumlah}\n\nKurangi jumlahnya, atau tunggu alat dikembalikan dulu.`;
+            alert(pesan);
+            messageArea.innerHTML = `<p style="color: red; padding: 10px; font-weight: bold;">Gagal: Stok tidak cukup! Tersedia ${tersedia}, mau pinjam ${productData.jumlah}.</p>`;
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:3000/api/peminjaman', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(productData) });
+            const result = await response.json();
+            if (response.status === 201) {
+                messageArea.innerHTML = `<p style="color: green; padding: 10px; font-weight: bold;">Berhasil: ${result.message}</p>`;
+                formTambah.reset(); updateStatusOtomatis(); updateInfoStok();
+                setTimeout(() => { messageArea.innerHTML = ''; }, 2000);
+            } else { messageArea.innerHTML = `<p style="color: red;">Gagal: ${result.message}</p>`; }
+        } catch (error) { messageArea.innerHTML = `<p style="color: red;">Koneksi gagal. Pastikan backend aktif.</p>`; }
+    });
+</script>
+</body>
+</html>
